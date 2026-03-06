@@ -73,6 +73,9 @@ class _ConfigScreenState extends State<ConfigScreen> {
     if (_ssidCtrl.text.isEmpty && cfg['ssid'] != null) {
       _ssidCtrl.text = cfg['ssid'].toString();
     }
+    if (_passCtrl.text.isEmpty && cfg['pass'] != null) {
+      _passCtrl.text = cfg['pass'].toString();
+    }
     if (_mqttCtrl.text.isEmpty && cfg['mqtt_host'] != null) {
       _mqttCtrl.text = cfg['mqtt_host'].toString();
     }

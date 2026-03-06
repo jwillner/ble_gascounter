@@ -261,12 +261,12 @@ void bleSendState() {
 }
 
 void bleSendConfig() {
-  char buf[200];
+  char buf[256];
   snprintf(buf, sizeof(buf),
     "{\"type\":\"config\","
-    "\"ssid\":\"%s\",\"mqtt_host\":\"%s\","
+    "\"ssid\":\"%s\",\"pass\":\"%s\",\"mqtt_host\":\"%s\","
     "\"pulse_vol\":%.4f,\"kwh_m3\":%.3f}",
-    WIFI_SSID, MQTT_HOST, pulse_volume_m3, gas_kwh_per_m3);
+    WIFI_SSID, WIFI_PASS, MQTT_HOST, pulse_volume_m3, gas_kwh_per_m3);
 
   bleSend(String(buf));
 }
