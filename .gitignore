@@ -1,0 +1,33 @@
+# Arduino build
+firmware/.arduino_build_*/
+firmware/.arduino_cache_*/
+
+# Flutter / Dart
+app/.dart_tool/
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+app/.packages
+app/.pub-cache/
+app/.pub/
+app/build/
+app/*.iml
+app/*.ipr
+app/*.iws
+app/.idea/
+app/pubspec.lock
+
+# Android
+app/android/.gradle/
+app/android/local.properties
+app/android/key.properties
+app/android/app/debug.keystore
+
+# iOS
+app/ios/Pods/
+app/ios/.symlinks/
+app/ios/Flutter/Flutter.framework/
+app/ios/Flutter/Flutter.podspec/
+
+# General
+.DS_Store
+*.log

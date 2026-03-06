@@ -1,0 +1,25 @@
+name: ble_gascounter
+description: BLE GasCounter App
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_blue_plus: ^1.31.17
+  permission_handler: ^11.3.1
+  cupertino_icons: ^1.0.6
+
+dependency_overrides:
+  flutter_blue_plus_android: 1.35.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
