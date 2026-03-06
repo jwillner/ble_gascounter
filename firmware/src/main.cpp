@@ -65,9 +65,14 @@ static const uint32_t RED_PULSE_DURATION_MS = 1000UL;
 
 // -------- LED ----------
 static const uint8_t LED_BRIGHTNESS = 50;
-static const uint8_t LED_GREEN_R = 0,   LED_GREEN_G = 150, LED_GREEN_B = 0;
-static const uint8_t LED_RED_R   = 150, LED_RED_G   = 0,   LED_RED_B   = 0;
-static const uint8_t LED_OFF_R   = 0,   LED_OFF_G   = 0,   LED_OFF_B   = 0;
+static const uint8_t LED_GREEN_R  = 0,   LED_GREEN_G  = 150, LED_GREEN_B  = 0;
+static const uint8_t LED_RED_R    = 150, LED_RED_G    = 0,   LED_RED_B    = 0;
+static const uint8_t LED_BLUE_R   = 0,   LED_BLUE_G   = 0,   LED_BLUE_B   = 150;
+static const uint8_t LED_YELLOW_R = 150, LED_YELLOW_G = 100, LED_YELLOW_B = 0;
+static const uint8_t LED_WHITE_R  = 120, LED_WHITE_G  = 120, LED_WHITE_B  = 120;
+static const uint8_t LED_OFF_R    = 0,   LED_OFF_G    = 0,   LED_OFF_B    = 0;
+static const uint32_t BLE_BLINK_INTERVAL_MS  = 500UL;
+static const uint32_t WHITE_PULSE_DURATION_MS = 200UL;
 
 // -------- Forward declarations ----------
 static inline float mWhToKWh(uint32_t mwh);
@@ -514,24 +519,46 @@ void handleSensorChange() {
 //
 
 void updateStatusLed() {
+  uint32_t now = millis();
+
+  // Weisser Puls bei Impuls (höchste Priorität)
   if (red_pulse_pending) {
     noInterrupts();
     red_pulse_pending = false;
     interrupts();
     redActive  = true;
-    redStartMs = millis();
+    redStartMs = now;
   }
-
   if (redActive) {
-    if ((uint32_t)(millis() - redStartMs) < RED_PULSE_DURATION_MS) {
-      setLed(LED_RED_R, LED_RED_G, LED_RED_B);
+    if ((uint32_t)(now - redStartMs) < WHITE_PULSE_DURATION_MS) {
+      setLed(LED_WHITE_R, LED_WHITE_G, LED_WHITE_B);
       return;
     }
     redActive = false;
   }
 
-  if (mqttOnline) { setLed(LED_GREEN_R, LED_GREEN_G, LED_GREEN_B); return; }
-  setLed(LED_OFF_R, LED_OFF_G, LED_OFF_B);
+  // BLE verbunden → Blau blinkend
+  if (bleConnected) {
+    bool on = ((now / BLE_BLINK_INTERVAL_MS) % 2) == 0;
+    if (on) setLed(LED_BLUE_R, LED_BLUE_G, LED_BLUE_B);
+    else     setLed(LED_OFF_R,  LED_OFF_G,  LED_OFF_B);
+    return;
+  }
+
+  // MQTT verbunden → Grün
+  if (mqttOnline) {
+    setLed(LED_GREEN_R, LED_GREEN_G, LED_GREEN_B);
+    return;
+  }
+
+  // WiFi verbunden, aber kein MQTT → Gelb
+  if (WiFi.status() == WL_CONNECTED) {
+    setLed(LED_YELLOW_R, LED_YELLOW_G, LED_YELLOW_B);
+    return;
+  }
+
+  // Kein WiFi → Rot
+  setLed(LED_RED_R, LED_RED_G, LED_RED_B);
 }
 
 //

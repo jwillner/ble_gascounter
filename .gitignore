@@ -1,6 +1,7 @@
 # Arduino build
 firmware/.arduino_build_*/
 firmware/.arduino_cache_*/
+firmware/build/
 
 # Flutter / Dart
 app/.dart_tool/
